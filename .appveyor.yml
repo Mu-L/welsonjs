@@ -16,7 +16,6 @@ environment:
 
 before_build:
   - git submodule update --init --recursive
-  - nuget restore native\ManagedEsent\EsentInterop
   - nuget restore native\WelsonJS.Augmented
 
 build_script:

@@ -15,6 +15,7 @@ environment:
       SIGNING_POLICY_SLUG: release-signing
 
 before_build:
+  - git submodule update --init --recursive
   - nuget restore native\WelsonJS.Augmented
 
 build_script:

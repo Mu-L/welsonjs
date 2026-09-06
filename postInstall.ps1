@@ -1056,14 +1056,22 @@ try {
     if (Test-ComponentSelected -Name "hwp_automation") {
         if (Test-Path $HwpAutomationCompressed) {
             $hwpAutomationDirectory = Join-Path $TargetDir "hwp_automation"
+            $modulePath = Join-Path `
+                $hwpAutomationDirectory `
+                "FilePathCheckerModuleExample.dll"
 
-            Extract-CompressedFile `
+            # Create destination directory
+            if (-not (Test-Path $hwpAutomationDirectory)) {
+                New-Item -Path $hwpAutomationDirectory -ItemType Directory -Force | Out-Null
+            }
+
+            # Extract HWP Automation module
+            Extract-GZipFile `
                 -CompressedPath $HwpAutomationCompressed `
-                -DestinationDirectory $hwpAutomationDirectory
+                -DestinationPath $modulePath
 
             # Register HWP Automation module
             $registryPath = "HKCU:\Software\HNC\HwpAutomation\Modules"
-            $modulePath = Join-Path $hwpAutomationDirectory "FilePathCheckerModuleExample.dll"
 
             if (Test-Path $modulePath) {
                 if (-not (Test-Path $registryPath)) {

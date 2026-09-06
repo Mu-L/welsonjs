@@ -20,7 +20,7 @@ before_build:
   - nuget restore native\WelsonJS.Augmented
 
 build_script:
-  - msbuild "C:\projects\welsonjs\native\WelsonJS.Augmented\WelsonJS.Augmented.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Configuration=%CONFIGURATION% /p:Platform="x86"
+  - msbuild "C:\projects\welsonjs\native\WelsonJS.Augmented\WelsonJS.Augmented.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Configuration=%CONFIGURATION% /p:Platform="x86" /p:TargetFrameworks=net472
 
 after_build:
    - cmd: mkdir artifacts

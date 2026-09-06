@@ -1,3 +1,6 @@
-[submodule "ChakraCore"]
-	path = WelsonJS.Augmented/ChakraCore
-	url = https://github.com/chakra-core/ChakraCore
+[submodule "native/ManagedEsent"]
+	path = native/ManagedEsent
+	url = https://github.com/microsoft/ManagedEsent.git
+[submodule "native/ChakraCore"]
+	path = native/ChakraCore
+	url = https://github.com/chakra-core/ChakraCore.git

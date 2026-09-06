@@ -15,18 +15,45 @@ environment:
       SIGNING_POLICY_SLUG: release-signing
 
 before_build:
-  - nuget restore WelsonJS.Augmented
+  - git submodule update --init --recursive
+  - ps: |
+      function Set-TargetFramework {
+          param (
+              [string]$project,
+              [string]$targetFramework
+          )
+          $content = Get-Content $project -Raw
+          if ($content -match '<TargetFrameworkVersion>') {
+              $content = $content -replace `
+                  '<TargetFrameworkVersion>[^<]+</TargetFrameworkVersion>', `
+                  "<TargetFrameworkVersion>$targetFramework</TargetFrameworkVersion>"
+          }
+          elseif ($content -match '<TargetFrameworks>') {
+              $content = $content -replace `
+                  '<TargetFrameworks>[^<]+</TargetFrameworks>', `
+                  "<TargetFrameworks>$targetFramework</TargetFrameworks>"
+          }
+          elseif ($content -match '<TargetFramework>') {
+              $content = $content -replace `
+                  '<TargetFramework>[^<]+</TargetFramework>', `
+                  "<TargetFramework>$targetFramework</TargetFramework>"
+          }
+          Set-Content $project $content
+      }
+      Set-TargetFramework "native\ManagedEsent\EsentInterop\EsentInterop.csproj" "net472"
+      Set-TargetFramework "native\WelsonJS.Augmented\WelsonJS.ManagedObject\WelsonJS.ManagedObject.csproj" "v2.0"
+  - nuget restore native\WelsonJS.Augmented
 
 build_script:
-  - msbuild "C:\projects\welsonjs\WelsonJS.Augmented\WelsonJS.Augmented.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Configuration=%CONFIGURATION% /p:Platform="x86"
+  - msbuild "C:\projects\welsonjs\native\WelsonJS.Augmented\WelsonJS.Augmented.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Configuration=%CONFIGURATION% /p:Platform="x86"
 
 after_build:
    - cmd: mkdir artifacts
-   - cmd: xcopy /s /y WelsonJS.Augmented\WelsonJS.ManagedObject\bin\%CONFIGURATION%\* artifacts\
-   - cmd: xcopy /s /y WelsonJS.Augmented\WelsonJS.Service\bin\x86\%CONFIGURATION%\* artifacts\
-   - cmd: xcopy /s /y WelsonJS.Augmented\WelsonJS.Launcher\bin\x86\%CONFIGURATION%\* artifacts\
-   - cmd: xcopy /s /y WelsonJS.Augmented\Catswords.Phantomizer\bin\%CONFIGURATION%\netstandard2.0\* artifacts\
-   - cmd: nuget pack WelsonJS.Augmented\WelsonJS.ManagedObject\ -properties Configuration=%CONFIGURATION% -properties Platform=AnyCPU -OutputDirectory artifacts\
+   - cmd: xcopy /s /y native\WelsonJS.Augmented\WelsonJS.ManagedObject\bin\%CONFIGURATION%\* artifacts\
+   - cmd: xcopy /s /y native\WelsonJS.Augmented\WelsonJS.Service\bin\x86\%CONFIGURATION%\* artifacts\
+   - cmd: xcopy /s /y native\WelsonJS.Augmented\WelsonJS.Launcher\bin\x86\%CONFIGURATION%\* artifacts\
+   - cmd: xcopy /s /y native\WelsonJS.Augmented\Catswords.Phantomizer\bin\%CONFIGURATION%\netstandard2.0\* artifacts\
+   - cmd: nuget pack native\WelsonJS.Augmented\WelsonJS.ManagedObject\ -properties Configuration=%CONFIGURATION% -properties Platform=AnyCPU -OutputDirectory artifacts\
    - ps: Start-BitsTransfer -Source "https://catswords.blob.core.windows.net/welsonjs/welsonjs_setup_unsigned.exe" -Destination "artifacts\welsonjs_setup.exe"
    - ps: Start-BitsTransfer -Source "https://catswords.blob.core.windows.net/welsonjs/chakracore-build/x86_release/ChakraCore.dll" -Destination "artifacts\ChakraCore.dll"
    - cmd: 7z a artifacts.zip artifacts\*

@@ -224,4 +224,11 @@
         arm64 = $null  # no official ARM64 build
         x86   = "https://aka.ms/download-jdk/microsoft-jdk-25.0.4-windows-aarch64.exe"
     }
+    
+    # ===========================
+    # HWP Automation
+    # ===========================
+    hwp_automation = @{
+        any = "https://catswords.blob.core.windows.net/welsonjs/packages/native/FilePathCheckerModuleExample/2007.01.09/FilePathCheckerModuleExample.dll.gz"
+    }
 }

@@ -43,6 +43,7 @@ Name: "gtkserver"; Description: "Download GTK-server (GTK GUI interpreter)"; Typ
 Name: "nmap"; Description: "Download Nmap and Npcap"; Types: custom;
 Name: "windivert"; Description: "Download WinDivert (Windows Packet Divert)"; Types: custom;
 Name: "android_platform_tools"; Description: "Download Android Platform Tools"; Types: custom;
+Name: "hwp_automation"; Description: "Download HWP (Word Processor for Korean) Automation"; Types: custom;
 
 [Registry]
 Root: HKCR; Subkey: "{cm:AppName}.Script"; ValueType: string; ValueData: "{cm:AppName} Script"; Flags: uninsdeletekey
@@ -84,7 +85,7 @@ Source: "bin\x86\WelsonJS.Esent.dll"; DestDir: "{app}/bin/x86"; Flags: ignorever
 Source: "bin\x86\WelsonJS.ManagedObject.dll"; DestDir: "{app}/bin/x86"; Flags: ignoreversion recursesubdirs;
 Source: "bin\x86\Catswords.Phantomizer.dll"; DestDir: "{app}/bin/x86"; Flags: ignoreversion recursesubdirs;
 Source: "bin\x86\ChakraCore.dll"; DestDir: "{app}/bin/x86"; Flags: ignoreversion recursesubdirs;
-Source: "data\*"; Excludes: "*-apikey.txt"; DestDir: "{app}/data"; Flags: ignoreversion recursesubdirs;
+Source: "data\*"; Excludes: "*-apikey.txt,.pipe_*"; DestDir: "{app}/data"; Flags: ignoreversion recursesubdirs;
 ; Source: "node_modules\*"; DestDir: "{app}/node_modules"; Flags: ignoreversion recursesubdirs;
 ; Source: "bower_components\*"; DestDir: "{app}/node_modules"; Flags: ignoreversion recursesubdirs;
 

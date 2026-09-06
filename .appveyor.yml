@@ -25,6 +25,7 @@ before_build:
 
 build_script:
   - msbuild "C:\projects\welsonjs\native\WelsonJS.Augmented\WelsonJS.Augmented.sln" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Configuration=%CONFIGURATION% /p:Platform="x86"
+  - msbuild /m /p:Platform="x86" /p:Configuration=%CONFIGURATION% "C:\projects\welsonjs\native\ChakraCore\Chakra.Core.sln"
 
 after_build:
    - cmd: mkdir artifacts
@@ -34,7 +35,7 @@ after_build:
    - cmd: xcopy /s /y native\WelsonJS.Augmented\Catswords.Phantomizer\bin\%CONFIGURATION%\netstandard2.0\* artifacts\
    - cmd: nuget pack native\WelsonJS.Augmented\WelsonJS.ManagedObject\ -properties Configuration=%CONFIGURATION% -properties Platform=AnyCPU -OutputDirectory artifacts\
    - ps: Start-BitsTransfer -Source "https://catswords.blob.core.windows.net/welsonjs/welsonjs_setup_unsigned.exe" -Destination "artifacts\welsonjs_setup.exe"
-   - ps: Start-BitsTransfer -Source "https://catswords.blob.core.windows.net/welsonjs/chakracore-build/x86_release/ChakraCore.dll" -Destination "artifacts\ChakraCore.dll"
+   - cmd: copy /Y native\ChakraCore\Build\VcBuild\bin\x86_%CONFIGURATION%\ChakraCore.dll artifacts\
    - cmd: 7z a artifacts.zip artifacts\*
 
 artifacts:

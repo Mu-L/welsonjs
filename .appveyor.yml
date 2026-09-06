@@ -17,10 +17,31 @@ environment:
 before_build:
   - git submodule update --init --recursive
   - ps: |
-      $project = "native\ManagedEsent\EsentInterop\EsentInterop.csproj"
-      (Get-Content $project -Raw) `
-        -replace '<TargetFrameworks>[^<]+</TargetFrameworks>', '<TargetFrameworks>net472</TargetFrameworks>' |
-        Set-Content $project
+      function Set-TargetFramework {
+          param (
+              [string]$project,
+              [string]$targetFramework
+          )
+          $content = Get-Content $project -Raw
+          if ($content -match '<TargetFrameworkVersion>') {
+              $content = $content -replace `
+                  '<TargetFrameworkVersion>[^<]+</TargetFrameworkVersion>', `
+                  "<TargetFrameworkVersion>$targetFramework</TargetFrameworkVersion>"
+          }
+          elseif ($content -match '<TargetFrameworks>') {
+              $content = $content -replace `
+                  '<TargetFrameworks>[^<]+</TargetFrameworks>', `
+                  "<TargetFrameworks>$targetFramework</TargetFrameworks>"
+          }
+          elseif ($content -match '<TargetFramework>') {
+              $content = $content -replace `
+                  '<TargetFramework>[^<]+</TargetFramework>', `
+                  "<TargetFramework>$targetFramework</TargetFramework>"
+          }
+          Set-Content $project $content
+      }
+      Set-TargetFramework "native\ManagedEsent\EsentInterop\EsentInterop.csproj" "net472"
+      Set-TargetFramework "native\WelsonJS.Augmented\WelsonJS.ManagedObject\WelsonJS.ManagedObject.csproj" "v2.0"
   - nuget restore native\WelsonJS.Augmented
 
 build_script:

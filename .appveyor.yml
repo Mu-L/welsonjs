@@ -16,7 +16,11 @@ environment:
 
 before_build:
   - git submodule update --init --recursive
-  - dotnet restore native\WelsonJS.Augmented\WelsonJS.Esent\WelsonJS.Esent.csproj --framework net472
+  - ps: |
+      $project = "native\ManagedEsent\EsentInterop\EsentInterop.csproj"
+      (Get-Content $project -Raw) `
+        -replace '<TargetFrameworks>[^<]+</TargetFrameworks>', '<TargetFrameworks>net472</TargetFrameworks>' |
+        Set-Content $project
   - nuget restore native\WelsonJS.Augmented
 
 build_script:

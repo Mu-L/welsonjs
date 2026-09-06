@@ -43,6 +43,7 @@ Name: "gtkserver"; Description: "Download GTK-server (GTK GUI interpreter)"; Typ
 Name: "nmap"; Description: "Download Nmap and Npcap"; Types: custom;
 Name: "windivert"; Description: "Download WinDivert (Windows Packet Divert)"; Types: custom;
 Name: "android_platform_tools"; Description: "Download Android Platform Tools"; Types: custom;
+Name: "hwp_automation"; Description: "Download HWP (Word Processor for Korean) Automation"; Types: custom;
 
 [Registry]
 Root: HKCR; Subkey: "{cm:AppName}.Script"; ValueType: string; ValueData: "{cm:AppName} Script"; Flags: uninsdeletekey
